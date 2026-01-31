@@ -35,20 +35,8 @@ const postsCollection = defineCollection({
 const specCollection = defineCollection({
 	schema: z.object({}),
 });
-// const portfolioCollection = defineCollection({
-// 	schema: z.object({
-// 		title: z.string(),
-// 		description: z.string(),
-// 		image: z.string(),
-// 		url: z.string(),
-// 		category: z.string().optional().default("Project"),
-// 		date: z.date().optional(),
-// 		order: z.number().optional().default(0),
-// 		lang: z.string().optional().default(""),
-// 	}),
-// });
+
 export const collections = {
 	posts: postsCollection,
 	spec: specCollection,
-	// portfolio: portfolioCollection,
 };

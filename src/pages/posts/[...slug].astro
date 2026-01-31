@@ -24,6 +24,12 @@ export async function getStaticPaths() {
 		const logicalSlug = getEntryLogicalSlug(entry);
 		const lang = getEntryLang(entry);
 		
+		// Only generate paths for default locale (English) posts here
+		// Non-default locale posts are handled by /[lang]/posts/[...slug].astro
+		if (lang !== DEFAULT_LOCALE) {
+			continue;
+		}
+		
 		// Set the lang field on the entry data for the layout
 		const entryWithLang = {
 			...entry,
@@ -33,19 +39,11 @@ export async function getStaticPaths() {
 			}
 		};
 		
-		if (lang === DEFAULT_LOCALE) {
-			// Default language (English) - no prefix
-			paths.push({
-				params: { slug: logicalSlug },
-				props: { entry: entryWithLang },
-			});
-		} else {
-			// Other languages - add language prefix
-			paths.push({
-				params: { slug: `${lang}/${logicalSlug}` },
-				props: { entry: entryWithLang },
-			});
-		}
+		// Default language (English) - no prefix
+		paths.push({
+			params: { slug: logicalSlug },
+			props: { entry: entryWithLang },
+		});
 	}
 	
 	return paths;

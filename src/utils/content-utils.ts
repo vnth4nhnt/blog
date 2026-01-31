@@ -96,6 +96,18 @@ export async function getPostForLang(
 
 export async function getSortedPostsForLang(lang: string) {
 	const allPosts = await getRawSortedPosts();
+	
+	// For English, only show English posts (no fallbacks)
+	if (lang === DEFAULT_LOCALE) {
+		const englishOnlyPosts = allPosts.filter((post) => getPostLang(post) === lang);
+		return englishOnlyPosts.sort((a, b) => {
+			const dateA = new Date(a.data.published);
+			const dateB = new Date(b.data.published);
+			return dateA > dateB ? -1 : 1;
+		});
+	}
+	
+	// For other languages, keep the original logic with fallbacks
 	const logicalSlugs = Array.from(
 		new Set(allPosts.map((p) => getPostLogicalSlug(p))),
 	);
@@ -103,7 +115,9 @@ export async function getSortedPostsForLang(lang: string) {
 	const resolvedPosts: CollectionEntry<"posts">[] = [];
 	for (const slug of logicalSlugs) {
 		const post = await getPostForLang(slug, lang);
-		if (post) resolvedPosts.push(post);
+		if (post) {
+			resolvedPosts.push(post);
+		}
 	}
 
 	return resolvedPosts.sort((a, b) => {
@@ -169,14 +183,28 @@ export async function getRawSortedPosts() {
 // ... rest of the legacy post functions (keeping for compatibility)
 export async function getSortedPosts() {
 	const sorted = await getRawSortedPosts();
-	for (let i = 1; i < sorted.length; i++) {
-		sorted[i].data.nextSlug = sorted[i - 1].slug;
-		sorted[i].data.nextTitle = sorted[i - 1].data.title;
+	
+	// Group posts by language
+	const postsByLang: Record<string, typeof sorted> = {};
+	for (const post of sorted) {
+		const lang = getPostLang(post);
+		if (!postsByLang[lang]) postsByLang[lang] = [];
+		postsByLang[lang].push(post);
 	}
-	for (let i = 0; i < sorted.length - 1; i++) {
-		sorted[i].data.prevSlug = sorted[i + 1].slug;
-		sorted[i].data.prevTitle = sorted[i + 1].data.title;
+	
+	// Set prev/next only within the same language
+	for (const lang of Object.keys(postsByLang)) {
+		const langPosts = postsByLang[lang];
+		for (let i = 1; i < langPosts.length; i++) {
+			langPosts[i].data.nextSlug = langPosts[i - 1].slug;
+			langPosts[i].data.nextTitle = langPosts[i - 1].data.title;
+		}
+		for (let i = 0; i < langPosts.length - 1; i++) {
+			langPosts[i].data.prevSlug = langPosts[i + 1].slug;
+			langPosts[i].data.prevTitle = langPosts[i + 1].data.title;
+		}
 	}
+	
 	return sorted;
 }
 
@@ -185,15 +213,6 @@ export type PostForList = {
 	data: CollectionEntry<"posts">["data"];
 	lang: string;
 };
-
-export async function getSortedPostsList(): Promise<PostForList[]> {
-	const sortedFullPosts = await getRawSortedPosts();
-	return sortedFullPosts.map((post) => ({
-		slug: getPostLogicalSlug(post),
-		data: post.data,
-		lang: getPostLang(post),
-	}));
-}
 
 /* --- Tags & Categories --- */
 
@@ -295,10 +314,6 @@ export async function getPostAlternates(
 		};
 	});
 
-	if (!alternates.find((a) => a.lang === DEFAULT_LOCALE)) {
-		// ensure default exists if possible
-	}
-
 	alternates.push({
 		lang: "x-default",
 		href: `${site}${getPostUrlBySlug(logicalSlug, DEFAULT_LOCALE)}`,
@@ -321,42 +336,4 @@ export async function getPostByUrl(
 	);
 }
 
-/* --- Portfolio Specific --- */
 
-// export function getPortfolioLang(item: CollectionEntry<"portfolio">): string {
-// 	return getEntryLang(item);
-// }
-
-// export function getPortfolioLogicalSlug(
-// 	item: CollectionEntry<"portfolio">,
-// ): string {
-// 	return getEntryLogicalSlug(item);
-// }
-
-// export async function getPortfolioForLang(
-// 	logicalSlug: string,
-// 	lang: string,
-// ): Promise<CollectionEntry<"portfolio"> | undefined> {
-// 	const allItems = await getCollection("portfolio");
-// 	return resolveLocalizedEntry(allItems, logicalSlug, lang);
-// }
-
-// export async function getSortedPortfolioForLang(lang: string) {
-// 	const allItems = await getCollection("portfolio");
-// 	const logicalSlugs = Array.from(
-// 		new Set(allItems.map((item) => getPortfolioLogicalSlug(item))),
-// 	);
-
-// 	const resolvedItems: CollectionEntry<"portfolio">[] = [];
-// 	for (const slug of logicalSlugs) {
-// 		const item = await getPortfolioForLang(slug, lang);
-// 		if (item) resolvedItems.push(item);
-// 	}
-
-// 	return resolvedItems.sort((a, b) => {
-// 		const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
-// 		const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
-// 		if (dateA !== dateB) return dateB - dateA;
-// 		return (a.data.order || 0) - (b.data.order || 0);
-// 	});
-// }
