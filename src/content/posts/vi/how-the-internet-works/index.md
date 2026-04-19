@@ -1,5 +1,5 @@
 ---
-title: Web Starter 00. Internet đang hoạt động như thế nào?
+title: Internet đang hoạt động như thế nào?
 published: 2026-01-27
 description: 'Mọi hacker đều cần phải biết về networking và cách mà internet đang hoạt động'
 image: ''
@@ -11,7 +11,7 @@ lang: 'vi'
 
 > Đa số mọi người khi nhắc đến Internet thường nghĩ ngay đến website, google, facebook, trình duyệt và các URL. Nhưng web chỉ là một lát cắt rất mỏng của Internet. Internet luôn tồn tại ngay cả khi ngày mai web biến mất: Email, DNS, routing, file transfer, API, cloud infrastructure, ...
 
-## 00. Internet là gì? 
+## Internet là gì? 
 
 + Internet bản chất là một mạng của các mạng (a network of networks), nó hoạt động dựa trên một kỹ thuật được gọi là chuyển mạch gói (packet switching) và các giao thức được chuẩn hóa mà mọi máy tính đều có thể hiểu được.
 
@@ -19,7 +19,7 @@ lang: 'vi'
   
 + Internet là một hệ thống các mạng phân tán mà không phụ thuộc vào bất kỳ một máy tính nào. Nó không có trung tâm điều khiển nào cả, các máy tính có thể tự do kết nối và ngắt kết nối tới internet mà không làm ảnh hưởng tới phần còn lại.
 
-## 01. Kiến trúc phân tầng của Internet
+## Kiến trúc phân tầng của Internet
 
 + Internet được thiết kế để sống sót, mở rộng, thay đổi liên tục. Ngay từ đầu, những người xây dựng Internet đã phải đối mặt với một bài toán rất thực tế: làm sao để hàng triệu hệ thống từ các tổ chức khác nhau, sử dụng phần cứng khác nhau vẫn có thể giao tiếp với nhau mà không cần tin tưởng nhau tuyệt đối. Và giải pháp của họ không phải là một hệ thống bảo mật phức tạp, mà là **kiến trúc phân tầng**.
 
@@ -42,7 +42,7 @@ lang: 'vi'
 
 + Mô hình TCP/IP triển khai thực tế trên internet được xây dựng từ việc áp dụng chính tư duy phân tầng, kế thừa trực tiếp ý tưởng cốt lõi của mô hình OSI.
 
-## 02. Mô hình TCP/IP
+## Mô hình TCP/IP
 
 <img src="/images/web-starter_how-the-internet-works/osi_tcp-ip.png" width=800>
 
@@ -66,7 +66,7 @@ lang: 'vi'
 
 <img src="/images/web-starter_how-the-internet-works/encapsulation-decapsulation.png" width=800>
 
-## 03. Internet định danh mọi thứ thế nào?
+## Internet định danh mọi thứ thế nào?
 
 + Trước tiên, định danh chính là giá trị cho phép xác định một người hay một đối tượng cụ thể (tên, địa chỉ, số điện thoại, email, ...). Các định danh cũng có tính phân cấp, cho phép quản lý một các logic và hiệu quả các đối tượng trong một không gian xác định. Điều tương tự cũng xảy ra trong các hệ thống mạng, các đối tượng (dịch vụ, máy tính, thiết bị mạng) cũng được gán cho một giá trị định danh riêng để phân biệt lẫn nhau.
 + Trong mô hình TCP/IP, mỗi tầng lại có một nhiệm vụ khác nhau để điều khiển việc truyền thông tin giữa những đối tượng khác nhau nên cần có các cơ chế định danh khác nhau, không có một định danh nào hoàn hảo để có thể sử dụng xuyên suốt trên tất cả các tầng cả. Do đó mà một đối tượng có thể mang nhiều định danh, khi đó có thể cần một cơ chế "phân giải" để tìm kiếm một định danh của đối tượng này khi biết định danh của đối tượng đó ở tầng khác (ta sẽ nói thêm về phần này về sau).
@@ -103,7 +103,7 @@ lang: 'vi'
     
     <img src="/images/web-starter_how-the-internet-works/dns-resolution-example.png" width=800>
 
-## 04. IP - TCP - UDP
+## IP - TCP/UDP
 
 + Trong toàn bộ kiến trúc Internet, IP và TCP là hai giao thức cốt lõi đến mức mô hình vận hành của Internet được đặt tên trực tiếp theo chúng: `TCP/IP`. Điều này không phải ngẫu nhiên, mà phản ánh đúng triết lý thiết kế ban đầu của Internet: tách biệt rõ ràng giữa định tuyến gói tin và truyền dữ liệu end-to-end.
 
@@ -116,7 +116,7 @@ lang: 'vi'
 + Bên cạnh TCP, UDP (User Datagram Protocol) cũng là một giao thức quan trọng ở tầng giao vận. UDP không cung cấp cơ chế kết nối hay đảm bảo độ tin cậy, mà chỉ đóng vai trò là một lớp “bọc mỏng” trên IP để phân phối dữ liệu tới đúng ứng dụng thông qua port number. UDP tồn tại để phục vụ những trường hợp mà độ trễ và hiệu năng quan trọng hơn độ tin cậy (ví dụ dịch vụ livestream, dịch vụ DNS, ...), hoặc khi ứng dụng tự xây dựng cơ chế kiểm soát của riêng mình ở tầng trên
 
 
-## 05. Tổng kết
+## Tổng kết
 
 Như vậy, tôi đã trình bày tổng quan về cách internet đang hoạt động, tạo nền tảng kiến thức cần thiết để anh em tiếp tục học tập và khai thác trong lĩnh vực hacking một cách bài bản và có chiều sâu. 
 
